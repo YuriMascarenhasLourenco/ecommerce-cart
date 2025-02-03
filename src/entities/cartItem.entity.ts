@@ -5,7 +5,7 @@ import { Product } from './product.entity';
 @Entity()
 export class CartItem {
   @PrimaryGeneratedColumn()
-  id: number;
+  CartItemid: number;
   @Column()
   name: string;
   @Column()
