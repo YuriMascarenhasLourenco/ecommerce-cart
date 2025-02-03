@@ -13,25 +13,27 @@ export class CartService {
   ) {}
 
   async AddToCart(product: productDto, cartId: number, userId: number) {
-    const cart = await this.repo.find({
-      where: { cartId, finished: false, user: { id: userId } },
+    const cart = await this.repo.findOne({
+      where: { finished: false, user: { id: userId } },
       relations: ['itens'],
     });
     if (!cart) {
-      const newCart = await this.repo.create({
-        user: {id: userId },
+      const newCart = this.repo.create({
+        user: { id: userId },
         finished: false,
         total: 0,
       });
-      const item = await this.cartItem.findOne({
-        where: { product: { id: product.id }, cart: { cartId: cartId } },
-        relations: ['product', 'cart'],
-      });
-      if (item) {
-        item.quantity++;
-      }
-      return await this.cartItem.create(product);
+      await this.repo.save(newCart);
     }
+    const item = await this.cartItem.findOne({
+      where: { product: { id: product.id }, cart: { cartId: cartId } },
+      relations: ['product', 'cart'],
+    });
+    if (item) {
+      item.quantity++;
+    }
+    const newProduct = await this.cartItem.create(product);
+    return await this.cartItem.save(newProduct);
   }
   async deleteFromCart(id: number) {
     const item = await this.cartItem.findOne({ where: { CartItemid: id } });
@@ -43,12 +45,14 @@ export class CartService {
     }
     await this.cartItem.remove(item);
   }
-  async deleteCart(userId) {
+  async deleteCart(userId: number) {
     const cart = await this.repo.findOne({ where: { cartId: userId } });
     return await this.repo.remove(cart);
   }
   async plusCartItem(id: number) {
-    const cartChanged = await this.cartItem.findOne({ where: { CartItemid: id} });
+    const cartChanged = await this.cartItem.findOne({
+      where: { CartItemid: id },
+    });
     if (cartChanged) {
       cartChanged.quantity++;
 

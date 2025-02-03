@@ -9,6 +9,7 @@ import { Product } from './entities/product.entity';
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { User } from './entities/user.entity';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     CartModule,
@@ -20,10 +21,13 @@ import { User } from './entities/user.entity';
       password: '1234',
       database: 'cart-shopee',
       entities: [Cart, CartItem, Product, User],
-      synchronize: true,
+      synchronize: false,
     }),
     ProductModule,
     UserModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
