@@ -12,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { userSuscriber } from './subscribers/userSubscriber';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { RolesGuard } from './guard/role.guard';
+import { RolesGuard } from './auth/guards/role.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { PaymentModule } from './payment/payment.module';
 

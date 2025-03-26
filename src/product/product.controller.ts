@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { createProduct } from 'src/dto/createProduct.dto';
+import { createProduct } from 'src/product/dto/createProduct.dto';
 import { Public } from 'src/auth/decorator/public.decorator';
-import { RolesGuard } from 'src/guard/role.guard';
-import { Roles } from 'src/decorators/role.decorator';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/decorator/role.decorator';
 
 @Controller('product')
 export class ProductController {

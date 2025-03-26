@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
-import { userDto } from 'src/dto/user.dto';
+import { userDto } from 'src/user/dto/user.dto';
 import { cryptoUtil } from 'src/utils/crypt.util';
 import { plainToInstance } from 'class-transformer';
 

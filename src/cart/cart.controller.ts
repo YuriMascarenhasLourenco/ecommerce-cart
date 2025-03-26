@@ -8,10 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { productDto } from 'src/dto/product.dto';
-import { RolesGuard } from 'src/guard/role.guard';
-import { Roles } from 'src/decorators/role.decorator';
-import { AddCart } from 'src/dto/addCart.dto';
+import { productDto } from 'src/product/dto/product.dto';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/decorator/role.decorator';
+import { AddCart } from 'src/cart/dto/addCart.dto';
 
 @Controller('cart')
 @UseGuards(RolesGuard)

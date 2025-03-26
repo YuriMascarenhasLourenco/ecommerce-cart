@@ -1,4 +1,4 @@
-import { userDto } from './user.dto';
+import { userDto } from '../../user/dto/user.dto';
 
 export class loginUser extends userDto {
   userId: number;
