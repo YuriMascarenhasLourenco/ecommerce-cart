@@ -9,4 +9,6 @@ export class userDto {
   password: string;
   @IsEmail()
   email: string;
+  @IsString()
+  role: string;
 }

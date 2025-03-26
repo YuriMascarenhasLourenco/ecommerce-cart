@@ -1,16 +1,26 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { CartItem } from './cartItem.entity';
 import { User } from './user.entity';
 
 @Entity()
 export class Cart {
   @PrimaryGeneratedColumn()
-  cartId: number;
+  id: number;
+
   @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
   itens: CartItem[];
-  @Column({ default: 0 })
-  total: number;
+
   @Column({ default: false })
   finished: boolean;
-  user: User;
+
+  @OneToOne(() => User, (item) => item.cart)
+  @JoinColumn()
+  userId: User;
 }

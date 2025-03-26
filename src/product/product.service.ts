@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { createProduct } from 'src/dto/createProduct.dto';
 import { Product } from 'src/entities/product.entity';
 import { Repository } from 'typeorm';
 
@@ -8,6 +9,10 @@ export class ProductService {
   constructor(
     @InjectRepository(Product) private repoProduct: Repository<Product>,
   ) {}
+  async newProduct(body: createProduct) {
+    const product = await this.repoProduct.create(body);
+    return await this.repoProduct.save(product);
+  }
   async findAll() {
     return await this.repoProduct.find({});
   }

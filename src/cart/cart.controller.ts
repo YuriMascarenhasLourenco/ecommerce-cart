@@ -1,22 +1,30 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CartService } from './cart.service';
 import { productDto } from 'src/dto/product.dto';
+import { RolesGuard } from 'src/guard/role.guard';
+import { Roles } from 'src/decorators/role.decorator';
+import { AddCart } from 'src/dto/addCart.dto';
 
 @Controller('cart')
+@UseGuards(RolesGuard)
 export class CartController {
   constructor(private cartService: CartService) {}
-  @Post('add')
-  async AddCart(
-    @Body() body: { userId: number; cartId: number; product: productDto },
-  ) {
-    return await this.cartService.AddToCart(
-      body.product,
-      +body.cartId,
-      +body.userId,
-    );
+
+  @Post('add/:id')
+  @Roles('user', 'admin')
+  async AddCart(@Body() addCartDto: AddCart, @Param('id') userId: number) {
+    return await this.cartService.addToCart(userId, addCartDto);
   }
   @Delete('del-cart/:cartId')
-  async deleteCart(@Param('cartId') cartId: string) {
+  async deleteCart(@Param('cartId') cartId: number) {
     return this.cartService.deleteCart(+cartId);
   }
   @Delete('del-item')
@@ -26,5 +34,9 @@ export class CartController {
   @Post('plusItem')
   async plusItem(@Body() id: productDto) {
     return await this.cartService.plusCartItem(+id);
+  }
+  @Get(':id')
+  async getItems(@Param('id') id: string) {
+    return this.cartService.getItems(+id);
   }
 }

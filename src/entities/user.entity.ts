@@ -1,23 +1,26 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Cart } from './cart.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column()
   name: string;
+
   @Column({ unique: true })
   email: string;
-  @Column()
+
+  @Column({})
   password: string;
-  @OneToOne(() => Cart)
-  @JoinColumn()
+
+  @Column({ default: true })
+  salt: string;
+
+  @OneToOne(() => Cart, (cart) => cart.userId, { cascade: true })
   cart: Cart;
+
+  @Column({ default: 'user' })
+  role: string;
 }

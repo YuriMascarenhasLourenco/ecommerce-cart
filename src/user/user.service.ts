@@ -1,9 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
+import { userDto } from 'src/dto/user.dto';
+import { cryptoUtil } from 'src/utils/crypt.util';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -36,6 +39,8 @@ export class UserService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    user.name = updateUserDto.name;
+    user.email = updateUserDto.email;
     user.password = updateUserDto.password;
     return await this.userRepo.save(user);
   }
@@ -46,6 +51,25 @@ export class UserService {
       return await this.userRepo.remove(user);
     } else {
       throw new HttpException('There is no user', HttpStatus.NOT_FOUND);
+    }
+  }
+  async validatePassword(
+    email: string,
+    password: string,
+  ): Promise<userDto | null> {
+    Logger.log('');
+    const user = await this.userRepo.findOne({
+      where: {
+        email,
+      },
+    });
+    if (
+      user &&
+      (await cryptoUtil.validatePassword(password, user.salt, user.password))
+    ) {
+      return plainToInstance(userDto, user);
+    } else {
+      return null;
     }
   }
 }
