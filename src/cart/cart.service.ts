@@ -77,7 +77,8 @@ export class CartService {
     if (cartChanged) {
       cartChanged.quantity++;
 
-      return await this.cartItem.save(cartChanged);
+      await this.cartItem.save(cartChanged);
+      return cartChanged;
     }
     return null;
   }
@@ -89,7 +90,6 @@ export class CartService {
     if (cart) {
       return await this.cartItem.find({
         where: { cart: { id } },
-        relations: ['cart', 'product'],
       });
     }
   }

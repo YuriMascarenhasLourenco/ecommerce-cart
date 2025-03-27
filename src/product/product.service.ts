@@ -27,4 +27,7 @@ export class ProductService {
     }
     return product;
   }
+  async getOne(id: number) {
+    return await this.repoProduct.findOne({ where: { id } });
+  }
 }

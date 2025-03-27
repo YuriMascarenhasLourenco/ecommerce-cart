@@ -32,7 +32,7 @@ export class CartController {
     return await this.cartService.deleteFromCart(+cartItemId);
   }
   @Post('plusItem')
-  async plusItem(@Body() id: productDto) {
+  async plusItem(@Body() { id }: { id: number }) {
     return await this.cartService.plusCartItem(+id);
   }
   @Get(':id')
