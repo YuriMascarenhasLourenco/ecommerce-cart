@@ -40,11 +40,11 @@ The Shopee Cart project is an e-commerce backend application built using the **N
 3. Set up environment variables:
    Create a `.env` file in the root directory and configure the following:
    ```
-   DATABASE_HOST=localhost
-   DATABASE_PORT=5432
-   DATABASE_USERNAME=postgres
-   DATABASE_PASSWORD=1234
-   DATABASE_NAME=cart-shopee
+   DATABASE_HOST=<your-database-host>
+   DATABASE_PORT=<your-database-port>
+   DATABASE_USERNAME=<your-database-username>
+   DATABASE_PASSWORD=<your-database-password>
+   DATABASE_NAME=<your-database-name>
    STRIPE_SECRET_KEY=<your-stripe-secret-key>
    ```
 
