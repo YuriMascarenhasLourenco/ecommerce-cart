@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 export class ProductService {
   constructor(
     @InjectRepository(Product) private repoProduct: Repository<Product>,
-  ) { }
+  ) {}
   async newProduct(body: createProduct) {
     const product = await this.repoProduct.create(body);
     return await this.repoProduct.save(product);

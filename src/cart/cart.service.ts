@@ -71,8 +71,12 @@ export class CartService {
     return await this.repo.remove(cart);
   }
   async plusCartItem(id: number) {
+    const validId = Number(id);
+    if (isNaN(validId)) {
+      throw new HttpException('invalid id', HttpStatus.BAD_REQUEST);
+    }
     const cartChanged = await this.cartItem.findOne({
-      where: { id },
+      where: { id: validId },
     });
     if (cartChanged) {
       cartChanged.quantity++;

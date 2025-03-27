@@ -8,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { productDto } from 'src/product/dto/product.dto';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/decorator/role.decorator';
 import { AddCart } from 'src/cart/dto/addCart.dto';
@@ -33,6 +32,7 @@ export class CartController {
   }
   @Post('plusItem')
   async plusItem(@Body() { id }: { id: number }) {
+    console.log(id);
     return await this.cartService.plusCartItem(+id);
   }
   @Get(':id')

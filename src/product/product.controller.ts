@@ -26,7 +26,7 @@ export class ProductController {
   }
   @Public()
   @Get(':id')
-    getOne(@Param('id') id: string) {
-    return this.productService.getOne(+id); 
-}
+  getOne(@Param('id') id: string) {
+    return this.productService.getOne(+id);
+  }
 }
