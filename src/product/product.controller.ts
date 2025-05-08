@@ -1,15 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { createProduct } from 'src/product/dto/createProduct.dto';
 import { Public } from 'src/auth/decorator/public.decorator';
-import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/decorator/role.decorator';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
   @Post('add')
-  @UseGuards(RolesGuard)
   @Roles('admin')
   async createProduct(@Body() body: createProduct) {
     await this.productService.newProduct(body);
@@ -20,13 +18,20 @@ export class ProductController {
     return this.productService.findAll();
   }
   @Public()
-  @Get(':name')
+  @Get('name/:name') // Tornar a rota mais específica
   findOne(@Param('name') name: string) {
+    console.log('nameProduct:', name);
     return this.productService.findOne(name);
   }
   @Public()
-  @Get(':id')
+  @Get(':id') // Rota para buscar por ID
   getOne(@Param('id') id: string) {
+    console.log('idProduct:', id);
     return this.productService.getOne(+id);
+  }
+  @Put(':id')
+  @Roles('admin')
+  async updateProduct(@Param('id') id: string, @Body() body: createProduct) {
+    return this.productService.updateProduct(+id, body);
   }
 }

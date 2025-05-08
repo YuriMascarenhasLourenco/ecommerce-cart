@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { userDto } from 'src/user/dto/user.dto';
 import { cryptoUtil } from 'src/utils/crypt.util';
 import { plainToInstance } from 'class-transformer';
+import { userResponseDto } from './dto/user-response.dto';
 
 @Injectable()
 export class UserService {
@@ -71,5 +72,15 @@ export class UserService {
     } else {
       return null;
     }
+  }
+  async getMe(id: number): Promise<userResponseDto | null> {
+    const user = await this.userRepo.findOne({
+      where: { id },
+      select: ['id', 'name', 'email', 'role'],
+    });
+    if (user) {
+      return plainToInstance(userResponseDto, user);
+    }
+    return null;
   }
 }

@@ -15,6 +15,9 @@ export class CartService {
   ) {}
 
   async addToCart(userId: number, addCartDto: AddCart) {
+    console.log('userId', typeof userId);
+    console.log('productId', typeof addCartDto.productId);
+
     const { productId, quantity } = addCartDto;
     let cart = await this.repo.findOne({
       where: { finished: false, userId: { id: userId } },
@@ -66,9 +69,13 @@ export class CartService {
     }
     await this.cartItem.remove(item);
   }
-  async deleteCart(userId: number) {
-    const cart = await this.repo.findOne({ where: { id: userId } });
-    return await this.repo.remove(cart);
+  async deleteCart(delCart: number) {
+    const items = await this.cartItem.find({
+      where: {
+        cart: { id: delCart },
+      },
+    });
+    return await this.cartItem.remove(items);
   }
   async plusCartItem(id: number) {
     const validId = Number(id);
@@ -86,15 +93,37 @@ export class CartService {
     }
     return null;
   }
-  async getItems(id: number) {
+  async getItems(userId: number) {
+    try {
+      const cartItems = await this.cartItem
+        .createQueryBuilder('cartItem')
+        .leftJoinAndSelect('cartItem.cart', 'cart')
+        .leftJoinAndSelect('cartItem.product', 'product')
+        .select([
+          'cartItem.id AS id', // Alias para o ID do item no carrinho
+          'cartItem.quantity AS quantity', // Alias para a quantidade
+          'cart.id AS "cartId"', // Alias para o ID do carrinho
+          'product.id AS productId', // Alias para o ID do produto
+          'product.name AS name', // Alias para o nome do produto
+          'product.price AS price', // Alias para o preço do produto
+        ])
+        .where('cart.finished = :finished', { finished: false }) // Condição para carrinho não finalizado
+        .andWhere('cart.userId = :userId', { userId }) // Condição para o ID do usuário
+        .getRawMany(); // Retorna os dados com os aliases definidos
+      console.log(cartItems);
+      return cartItems;
+    } catch (error) {
+      throw new HttpException(
+        `Error fetching cart items: ${error}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+  async getAll() {
     const cart = await this.repo.find({
-      where: { id },
+      where: { finished: true },
       relations: ['itens', 'itens.product'],
     });
-    if (cart) {
-      return await this.cartItem.find({
-        where: { cart: { id } },
-      });
-    }
+    return cart;
   }
 }

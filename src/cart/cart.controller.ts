@@ -19,15 +19,21 @@ export class CartController {
 
   @Post('add/:id')
   @Roles('user', 'admin')
-  async AddCart(@Body() addCartDto: AddCart, @Param('id') userId: number) {
-    return await this.cartService.addToCart(userId, addCartDto);
+  async AddCart(@Body() addCartDto: AddCart, @Param('id') userId: string) {
+    console.log('userId', typeof userId);
+    console.log('addCartDto', addCartDto);
+    return await this.cartService.addToCart(+userId, addCartDto);
   }
-  @Delete('del-cart/:cartId')
-  async deleteCart(@Param('cartId') cartId: number) {
-    return this.cartService.deleteCart(+cartId);
+  @Delete(':delCart')
+  @Roles('user', 'admin')
+  async deleteCart(@Param('delCart') delCart: string) {
+    console.log('cartId:', delCart);
+    return this.cartService.deleteCart(+delCart);
   }
-  @Delete('del-item')
+  @Delete('del-item/:cartItemId')
+  @Roles('user', 'admin')
   async deleteItem(@Param('cartItemId') cartItemId: string) {
+    console.log(cartItemId);
     return await this.cartService.deleteFromCart(+cartItemId);
   }
   @Post('plusItem')
@@ -36,7 +42,14 @@ export class CartController {
     return await this.cartService.plusCartItem(+id);
   }
   @Get(':id')
+  @Roles('user', 'admin')
   async getItems(@Param('id') id: string) {
+    console.log(id);
     return this.cartService.getItems(+id);
+  }
+  @Get('all')
+  @Roles('user', 'admin')
+  async getAll() {
+    return this.cartService.getAll();
   }
 }

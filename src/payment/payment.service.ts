@@ -17,11 +17,13 @@ export class PaymentService {
       apiVersion: '2025-02-24.acacia',
     });
   }
-  async payment(cartId: number) {
+  async payment(userId: number) {
+    console.log('cartId', userId);
     const cart = await this.cart.findOne({
-      where: { id: cartId },
+      where: { finished: false, userId: { id: userId } },
       relations: ['itens', 'itens.product'],
     });
+    console.log('cart', cart);
     if (!cart || cart.itens.length === 0) {
       throw new NotFoundException('Carrinho não encontrado ou vazio.');
     }
@@ -39,6 +41,7 @@ export class PaymentService {
       success_url: 'http://localhost:3000/success',
       cancel_url: 'https://localhost:3000/cancelado',
     });
-    return { id: session.id, url: session.url };
+    console.log('session', session);
+    return { url: session.url };
   }
 }

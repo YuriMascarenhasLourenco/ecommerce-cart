@@ -19,4 +19,6 @@ export class Product {
   stock: number;
   @OneToMany(() => CartItem, (cartItem) => cartItem.product)
   cartItem: CartItem;
+  @Column({ nullable: true })
+  image: string;
 }

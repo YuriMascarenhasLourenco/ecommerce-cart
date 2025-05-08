@@ -16,7 +16,7 @@ export class CartItem {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ type: 'int' })
   quantity: number;
 
   @ManyToOne(() => Cart, (cart) => cart.itens)
